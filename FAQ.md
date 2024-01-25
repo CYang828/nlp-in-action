@@ -10,3 +10,21 @@ Port 443
 3.再次测试
 ssh -T git@github.com
 提示如下就说明成功了
+
+## gensim function() argument 'code' must be code, not str
+
+```bash
+pip install --upgrade aiohttp
+```
+
+[issue地址](https://github.com/aio-libs/aiohttp/issues/6794)
+
+## ModuleNotFoundError: No module named ‘altair.vegalite.v4’
+
+```bash
+pip install "altair<5"
+```
+https://discuss.streamlit.io/t/modulenotfounderror-no-module-named-altair-vegalite-v4/42921/6
+
+
+## 

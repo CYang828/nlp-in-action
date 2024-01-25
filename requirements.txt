@@ -231,3 +231,4 @@ y-py==0.6.2
 ypy-websocket==0.8.4
 zeugma==0.49
 zipp==3.1.0
+altair<5
