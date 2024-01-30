@@ -4,10 +4,11 @@
 
 gitee 备份地址 https://gitee.com/cyang828/nlp-in-action
 
-
+## 提问
 - FAQ 文档地址：https://rarelimiting.feishu.cn/wiki/EQTRwntmnidkpSkK9pOcLzOcnze
 
 
+## 大纲
 | 课程名称 | 理论讲解 | 下载 | 笔记 | 论文 |
 | -------- |  --------- | --------- | -------- | -------- |
 | 第一个自然语言Pipeline | [阅读](https://rarelimiting.feishu.cn/wiki/CTkPw9uOdiAZrrkSaXucJt1SnBh?fromScene=spaceOverview&create_from=create_doc_to_wiki) | | [地址](https://github.com/CYang828/nlp-in-action/blob/main/0.first-pipeline.ipynb) | |
