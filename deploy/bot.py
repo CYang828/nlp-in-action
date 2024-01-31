@@ -6,7 +6,6 @@ import pandas as pd
 import numpy as np
 import yaml
 
-from streamlit import caching
 
 # 可视化
 import seaborn as sns
@@ -28,7 +27,7 @@ sns.set(style="ticks", color_codes=True)
 sns.set_style(style="whitegrid")
 
 # 响应模板
-respond = lambda response: f'苹果客服: **{response}**'
+respond = lambda response: f'苹果客服: :green[**{response}**]'
 
 
 def main(phrase="有什么问题你尽管问!"):
@@ -44,7 +43,7 @@ def main(phrase="有什么问题你尽管问!"):
         backend_dash(intents, user_input, history_df)
 
     if end == False:
-        caching.clear_cache()
+        st.clear_cache()
         conversation(Actions("你能换种说法吗?"))
 
 
@@ -97,7 +96,7 @@ def talk(prompt):
     history_df = pd.DataFrame(dict(zip(columns, np.zeros(len(columns)))), index=[0])
 
     # 转换为对话历史条目，然后将其附加到数据框中
-    history_df = history_df.append(to_row(prediction, hardware, app), ignore_index=True)
+    history_df = history_df._append(to_row(prediction, hardware, app), ignore_index=True)
 
     return (user_input, hardware, app, intents, history_df)
 
@@ -112,9 +111,12 @@ def listener(max_intent, entity, actions):
         # 了解对话是否已结束的布尔值
         end = None
 
-        st.text("这解决了你的问题吗?")
-        yes = st.button("是")
-        no = st.button("否")
+        st.markdown("**这解决了你的问题吗?**")
+        col1, col2 = st.columns(2)
+        with col1:
+            yes = st.button("是", type="primary")
+        with col2:
+            no = st.button("否", type="primary")
 
         if yes:
             st.text(respond("太好了!很高兴能为你提供服务!"))
