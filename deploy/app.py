@@ -7,7 +7,7 @@ import bot
 # 创建一个具有多个页面的演示应用
 def main():
     # 将标志添加到侧边栏
-    st.sidebar.image("images/apple-logo-transparent.png", width=200)
+    st.sidebar.image("images/apple-logo-transparent.png", width=100)
     # st.sidebar.image("images/eve-logo.png", width=200)
 
     # 在侧边栏添加导航选项

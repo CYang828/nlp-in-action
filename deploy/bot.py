@@ -28,7 +28,7 @@ sns.set(style="ticks", color_codes=True)
 sns.set_style(style="whitegrid")
 
 # 响应模板
-respond = lambda response: f"苹果客服: **{response}**"
+respond = lambda response: f'苹果客服: **{response}**'
 
 
 def main(phrase="有什么问题你尽管问!"):
