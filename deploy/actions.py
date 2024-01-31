@@ -1,18 +1,14 @@
 import random
 
-# Visualization
+# 可视化
 import seaborn as sns
-import matplotlib.pyplot as plt
 
 sns.set(style="ticks", color_codes=True)
-# Data science
+# 数据科学
 import pandas as pd
-import numpy as np
-import re
-import collections
 import yaml
 
-# Loading in objects
+# 加载对象
 train = pd.read_pickle("../objects/train.pkl")
 
 with open(r"../objects/entities.yml") as file:
@@ -21,107 +17,90 @@ with open(r"../objects/entities.yml") as file:
 # with open(r"../objects/sorted_predictions.yml") as file:
 #     entities = yaml.load(file, Loader=yaml.FullLoader)
 
-# Making a class to define all the actions to do when you are
+
+# 制作一个类来定义当您
 class Actions:
     memory = {"hardware": [], "app": []}
 
     def __init__(self, startup):
-        # The initial prompt
+        # 初始提示
         self.startup = startup
 
-    # If greet
+    # 如果打招呼
     def utter_greet(self):
-        # Storing the bank of responses
+        # 存储响应库
         return random.choice(
             [
-                "Hi! My name is EVE. How may I assist you today?",
-                "Hello. How may I be of help?",
+                "你好！我叫果bo。我今天可以怎么帮你？",
+                "你好。我能帮上忙吗？",
             ]
         )
 
-    # If goodbye
+    # 如果再见
     def utter_goodbye(self):
-        reaffirm = ["Is there anything else I could help you with?"]
+        reaffirm = ["还有其他事我可以帮忙的吗？"]
         goodbye = [
             "感谢您的时间。祝您有个愉快的一天！",
             "很高兴能帮上忙，祝您有个愉快的一天！",
         ]
         return random.choice(goodbye)
 
-    # Speak to representative
+    # 联系客服
     def link_to_human(self):
-        return random.choice(["Alright. Let me direct you to a representative!"])
+        return random.choice(["好的。让我把您转接到客服！"])
 
     def battery(self, entity):
         if entity == "none":
-            return random.choice(
-                ["What device are you using?", "May I know what device you are using?"]
-            )
+            return random.choice(["您使用的是什么设备？", "您使用的是什么设备？"])
         else:
-            return random.choice(
-                [
-                    "I'm sorry to hear about there. You can check the battery health in your\
-                                  settings. If it is below 75%, please consider getting it replaced at your local apple store"
-                ]
-            )
+            return random.choice(["很抱歉听到这个。您可以在设置中检查电池健康状况。如果低于75％，请考虑在您当地的苹果商店更换"])
 
     def forgot_pass(self):
         reset_appleid = "https://support.apple.com/en-us/HT201355"
-        return f"I'm sorry to hear about that, go to {reset_appleid}"
+        return f"很抱歉听到这个，前往{reset_appleid}"
 
     def payment(self):
-        return random.choice(
-            ["Login with your Apple ID and update your payment method"]
-        )
+        return random.choice(["使用您的Apple ID登录并更新您的付款方式"])
 
     def challenge_robot(self):
         return random.choice(
             [
-                "I am EVE, your personal assitant, and I was designed by Matthew to assist you.",
+                "我是果bo，您的个人助手，由Matthew设计来帮助您。",
             ]
         )
 
     def update(self, entity):
-        # Affirm hardware
+        # 确认硬件
         if entity == "none":
-            return random.choice(
-                ["What device are you using?", "May I know what device you are using?"]
-            )
+            return random.choice(["您使用的是什么设备？", "您使用的是什么设备？"])
         elif entity == "macbook pro":
             return random.choice(
                 [
-                    "Find details on how to update your macbook pro here: https://support.apple.com/en-us/HT201541"
+                    "在这里找到有关如何更新您的macbook pro的详细信息：https://support.apple.com/en-us/HT201541"
                 ]
             )
         else:
             return random.choice(
-                [
-                    "I'm sorry to hear that the update isn't working for you. Please find more information here: https://support.apple.com/en-us/HT201222"
-                ]
+                ["很抱歉，更新对您来说不起作用。请在这里找到更多信息：https://support.apple.com/en-us/HT201222"]
             )
 
     def info(self, entity):
         if entity == "macbook pro":
             return random.choice(
                 [
-                    "Okay! Right now we have 13 and 16 inch macbook pros. Please find more info here: https://www.apple.com/macbook-pro/"
+                    "好的！现在我们有13英寸和16英寸的macbook pro。请在这里找到更多信息：https://www.apple.com/macbook-pro/"
                 ]
             )
         if entity == "ipad":
-            return random.choice(["We have a few options for iPads ranging from "])
+            return random.choice(["我们有几种iPad可供选择，价格从"])
         if entity == "iphone":
             return random.choice(
                 [
-                    "Our most latest iPhone model is the iPhone 11. It comes in different model sizes. Please find more info here: https://www.apple.com/iphone/"
+                    "我们最新的iPhone型号是iPhone 11。它有不同的型号尺寸。请在这里找到更多信息：https://www.apple.com/iphone/"
                 ]
             )
         if entity == "none":
-            return random.choice(["What would you like to get info on good sir?"])
+            return random.choice(["您想了解哪方面的信息？"])
 
     def fallback(self):
-        return random.choice(
-            [
-                "I apologize. I didn't quite understand what you tried to say. Could you rephrase?"
-            ]
-        )
-
+        return random.choice(["抱歉，我不太明白您想说什么。您能重新表达一下吗？"])

@@ -1,7 +1,7 @@
 # Streamlit
 import streamlit as st
 
-# Data science
+# 数据科学
 import pandas as pd
 
 print(f"Pandas: {pd.__version__}")
@@ -9,7 +9,7 @@ import numpy as np
 
 print(f"Numpy: {np.__version__}")
 
-# Deep Learning
+# 深度学习
 import tensorflow as tf
 
 print(f"Tensorflow: {tf.__version__}")
@@ -20,7 +20,7 @@ import sklearn
 
 print(f"Sklearn: {sklearn.__version__}")
 
-# Visualization
+# 可视化
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -29,7 +29,7 @@ sns.set(style="ticks", color_codes=True)
 import collections
 import yaml
 
-# Preprocessing and Keras
+# 预处理和Keras
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem.lancaster import LancasterStemmer
@@ -44,30 +44,29 @@ from keras.layers import Dense, LSTM, Bidirectional, Embedding, Dropout
 from keras.callbacks import ModelCheckpoint
 from sklearn.model_selection import train_test_split
 
-# Reading back in intents
+# 读取意图
 with open(r"../objects/intents.yml") as file:
     intents = yaml.load(file, Loader=yaml.FullLoader)
 
-# Reading in representative intents
+# 读取代表性意图
 with open(r"../objects/intents_repr.yml") as file:
     intents_repr = yaml.load(file, Loader=yaml.FullLoader)
 
-# Reading in training data
+# 读取训练数据
 train = pd.read_pickle("../objects/train.pkl")
 
 print(train.head())
-print(f"\nintents:\n{intents}")
-print(f"\nrepresentative intents:\n{intents_repr}")
+print(f"\n意图:\n{intents}")
+print(f"\n代表性意图:\n{intents_repr}")
 
 """
-KERAS PREPROCESSING
+KERAS 预处理
 """
-# Function definitions
+# 函数定义
 def make_tokenizer(docs, filters='!"#$%&()*+,-./:;<=>?@[\]^_`{|}~'):
     t = Tokenizer(filters=filters)
     t.fit_on_texts(docs)
     return t
-
 
 encode_tweets = lambda token, words: token.texts_to_sequences(words)
 
@@ -79,44 +78,43 @@ one_hot = lambda encode: OneHotEncoder(sparse=False).fit_transform(encode)
 
 get_max_token_length = lambda series: len(max(series, key=len))
 
-
 def preprocess():
-    # 1. Create tokenizer object
+    # 1. 创建分词器对象
     token = make_tokenizer(train["Utterance"])
 
-    # 2. Finding length of vocabulary
+    # 2. 查找词汇量的长度
     vocab_size = len(token.word_index) + 1
 
-    # 3. Finding maximum length of Tokens
+    # 3. 查找最大标记长度
 
     max_token_length = get_max_token_length(train["Utterance"])
 
-    print(f"Vocab Size: {vocab_size} \nMax Token Length: {max_token_length}")
+    print(f"词汇量大小: {vocab_size} \n最大标记长度: {max_token_length}")
 
-    # 4. Encode documents - matching with Keras dictionary
+    # 4. 编码文档 - 与 Keras 字典匹配
 
     encoded_tweets = encode_tweets(token, train["Utterance"])
 
-    # 5. Padding my documents - filling with tags to normalize the lengths
+    # 5. 填充我的文档 - 用标记填充以规范长度
 
     padded_tweets = pad_tweets(encoded_tweets, max_token_length)
-    print("Shape of padded tweets:", padded_tweets.shape)
-    print("\nPreview of encoded and padded tweets:\n", padded_tweets)
+    print("填充后的文档形状:", padded_tweets.shape)
+    print("\n编码和填充后的文档预览:\n", padded_tweets)
 
-    # 6. One hot encode to represent target variable data (intents)
-    # Sorting it to make it consistent every time you initialize this variable anywhere
+    # 6. 独热编码以表示目标变量数据（意图）
+    # 对其进行排序，以便每次在任何地方初始化此变量时都保持一致
     unique_intents = sorted(list(set(train["Intent"])))
 
-    # Making another tokenizer
+    # 创建另一个分词器
     output_tokenizer = make_tokenizer(
         unique_intents, filters='!"#$%&()*+,-/:;<=>?@[\]^`{|}~'
     )
     encoded_intents = encode_tweets(output_tokenizer, train["Intent"])
 
-    # Reshaping encoded Tweets for this one hot function
+    # 为此独热函数重塑编码的文档
     encoded_intents = np.array(encoded_intents).reshape(len(encoded_intents), 1)
     one_hot_intents = one_hot(encoded_intents)
-    print(f"\nPreview of intent representation:\n{one_hot_intents}")
+    print(f"\n意图表示预览:\n{one_hot_intents}")
 
     return (
         max_token_length,
@@ -126,7 +124,6 @@ def preprocess():
         unique_intents,
         vocab_size,
     )
-
 
 (
     max_token_length,
@@ -138,7 +135,7 @@ def preprocess():
 ) = preprocess()
 print(unique_intents)
 
-# 7. Split in to train and test
+# 7. 分割为训练和测试
 X_train, X_val, y_train, y_val = train_test_split(
     padded_tweets,
     one_hot_intents,
@@ -147,16 +144,16 @@ X_train, X_val, y_train, y_val = train_test_split(
     stratify=one_hot_intents,
 )
 print(
-    f"\nShape checks:\nX_train: {X_train.shape} X_val: {X_val.shape}\ny_train: {y_train.shape} y_val: {y_val.shape}"
+    f"\n形状检查:\nX_train: {X_train.shape} X_val: {X_val.shape}\ny_train: {y_train.shape} y_val: {y_val.shape}"
 )
 
 """
-EMBEDDING MATRIX
+嵌入矩阵
 """
-# Making my own embedding matrix that's in a specific order
+# 制作自己的特定顺序的嵌入矩阵
 d2v_embedding_matrix = pd.read_pickle("../objects/inbound_d2v.pkl")
 
-# Using gloVe word embeddings
+# 使用 gloVe 词嵌入
 embeddings_index = {}
 f = open("../models/glove.twitter.27B/glove.twitter.27B.25d.txt")
 for line in f:
@@ -166,29 +163,29 @@ for line in f:
     embeddings_index[word] = coefs
 f.close()
 
-print("Found %s word vectors." % len(embeddings_index))
+print("找到 %s 个词向量。" % len(embeddings_index))
 
-# Initializing required objects
+# 初始化所需对象
 word_index = token.word_index
-EMBEDDING_DIM = 25  # Because we are using the 25D gloVe embeddings
+EMBEDDING_DIM = 25  # 因为我们使用 25D gloVe 词嵌入
 
-# Getting my embedding matrix
+# 获取我的嵌入矩阵
 embedding_matrix = np.zeros((len(word_index) + 1, EMBEDDING_DIM))
 for word, i in word_index.items():
     embedding_vector = embeddings_index.get(word)
     if embedding_vector is not None:
-        # words not found in embedding index will be all-zeros.
+        # 在嵌入索引中找不到的词将是全零的。
         embedding_matrix[i] = embedding_vector
 
 print(embedding_matrix)
 
 
 def make_model(vocab_size, max_token_length):
-    """ In this function I define all the layers of my neural network"""
-    # Initialize
+    """在此函数中定义神经网络的所有层"""
+    # 初始化
     model = Sequential()
 
-    # Adding layers - For embedding layer, I made sure to add my embedding matrix into the weights paramater
+    # 添加层 - 对于嵌入层，我确保将我的嵌入矩阵添加到权重参数中
     model.add(
         Embedding(
             vocab_size,
@@ -199,37 +196,37 @@ def make_model(vocab_size, max_token_length):
         )
     )
     model.add(Bidirectional(LSTM(128)))
-    # Another LSTM layer. If things aren't doing well. Beef up the dense layer size.
+    # 另一层 LSTM。如果情况不佳，增加密集层大小。
     #    model.add(LSTM(128))
-    # Try 100
+    # 尝试 100
     model.add(
         Dense(600, activation="relu", kernel_regularizer="l2")
-    )  # Try 50, another dense layer? This takes a little bit of exploration
+    )  # 尝试 50，另一个密集层？这需要一些探索
 
-    # Adding another dense layer to increase model complexity
+    # 添加另一个密集层以增加模型复杂性
     model.add(Dense(600, activation="relu", kernel_regularizer="l2"))
 
-    # Only update 50 percent of the nodes - helps with overfitting
+    # 仅更新 50% 的节点 - 有助于防止过拟合
     model.add(Dropout(0.5))
 
-    # This last layer should be the size of the number of your intents!
-    # Use sigmoid for multilabel classification, otherwise, use softmax!
+    # 最后一层应该是你的意图数量大小！
+    # 对于多标签分类使用 sigmoid，否则使用 softmax！
     model.add(Dense(10, activation="softmax"))
 
     return model
 
 
-# Actually creating my model
+# 实际创建我的模型
 model = make_model(vocab_size, max_token_length)
 model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
 print(model.summary())
 
-# Initializing checkpoint settings to view progress and save model
+# 初始化检查点设置以查看进度并保存模型
 filename = "../models/intent_classification.h5"
 
-# Learning rate scheduling
-# This function keeps the initial learning rate for the first ten epochs
-# and decreases it exponentially after that.
+# 学习率调度
+# 此函数在前十个时期保持初始学习率
+# 并在此后按指数方式减少它。
 def scheduler(epoch, lr):
     if epoch < 20:
         return lr
@@ -250,17 +247,16 @@ early_stopping = tf.keras.callbacks.EarlyStopping(
 )
 
 
-# This saves the best model
+# 这将保存最佳模型
 checkpoint = ModelCheckpoint(
     filename, monitor="val_loss", verbose=1, save_best_only=True, mode="min"
 )
 
-# The model you get at the end of it is after 100 epochs, but that might not have been
-# the weights most associated with validation accuracy
+# 你在最后得到的模型是经过 100 个时期的，但那可能不是与验证准确性最相关的权重
 
-# Only save the weights when you model has the lowest val loss. Early stopping
+# 仅在模型具有最低验证损失时保存权重。提前停止
 
-# Fitting model
+# 拟合模型
 hist = model.fit(
     X_train,
     y_train,
@@ -271,58 +267,58 @@ hist = model.fit(
 )
 
 """
-Visualizing
+可视化
 """
-# Visualizing Training Loss vs Validation Loss (the loss is how wrong your model is)
+# 可视化训练损失与验证损失（损失是模型的错误程度）
 plt.figure(figsize=(10, 7))
-plt.plot(hist.history["val_loss"], label="Validation Loss")
-plt.plot(hist.history["loss"], label="Training Loss")
-plt.title("Training Loss vs Validation Loss")
+plt.plot(hist.history["val_loss"], label="验证损失")
+plt.plot(hist.history["loss"], label="训练损失")
+plt.title("训练损失 vs 验证损失")
 plt.legend()
 plt.savefig("plots/intentc_trainval_loss.png")
 
-# Visualizing Testing Accuracy vs Validation Accuracy
+# 可视化测试准确性与验证准确性
 plt.figure(figsize=(10, 7))
-plt.plot(hist.history["accuracy"], label="Training Accuracy")
-plt.plot(hist.history["val_accuracy"], label="Validation Accuracy")
-plt.title("Training Accuracy vs Validation Accuracy")
+plt.plot(hist.history["accuracy"], label="训练准确性")
+plt.plot(hist.history["val_accuracy"], label="验证准确性")
+plt.title("训练准确性 vs 验证准确性")
 plt.legend()
 plt.savefig("plots/intentc_trainval_acc.png")
 
 """
-Model step
+模型步骤
 """
 
-# I have to redefine and load in the model saved by my model checkpoint
+# 我必须重新定义并加载由我的模型检查点保存的模型
 from keras.models import load_model
 
 model = load_model("../models/intent_classification.h5")
 
 
 def infer_intent(text):
-    """ Takes as input an utterance an outputs a dictionary of intent probabilities """
-    # Making sure that my text is a string
+    """接受一个话语作为输入，并输出意图概率的字典"""
+    # 确保我的文本是字符串
     string_text = re.sub(r"[^ a-z A-Z 0-9]", " ", text)
 
-    # Converting to Keras form
+    # 转换为 Keras 形式
     keras_text = token.texts_to_sequences(string_text)
 
-    # Check for and remove unknown words - [] indicates that word is unknown
+    # 检查并删除未知词 - [] 表示单词未知
     if [] in keras_text:
-        # Filtering out
+        # 过滤
         keras_text = list(filter(None, keras_text))
     keras_text = np.array(keras_text).reshape(1, len(keras_text))
     x = pad_tweets(keras_text, max_token_length)
 
-    # Generate class probability predictions
-    # You're using the overfit model to predict!
+    # 生成类概率预测
+    # 你正在使用过拟合模型进行预测！
     intent_predictions = np.array(model.predict_proba(x)[0])
 
-    # Match probability predictions with intents
+    # 将概率预测与意图匹配
     pairs = list(zip(unique_intents, intent_predictions))
     dict_pairs = dict(pairs)
 
-    # Output dictionary
+    # 输出字典
     output = {
         k: v
         for k, v in sorted(dict_pairs.items(), key=lambda item: item[1], reverse=True)
@@ -332,6 +328,6 @@ def infer_intent(text):
 
 
 string_text, conf_dict = infer_intent("hi")
-print(f"You: {string_text}")
-print(f"Eve: \nIntents:{conf_dict}")
+print(f"你: {string_text}")
+print(f"机器人: \n意图:{conf_dict}")
 

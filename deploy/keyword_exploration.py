@@ -2,18 +2,18 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-# Visualization
+# 可视化
 import seaborn as sns
 import matplotlib.pyplot as plt
 
 sns.set(style="ticks", color_codes=True)
-# Making my visualizations pretty
+# 使可视化更美观
 sns.set_style("whitegrid")
-# Combination exploration
+# 组合探索
 import itertools
 import yaml
 
-# Loading back processed data
+# 加载处理后的数据
 processed = pd.read_pickle("../objects/processed.pkl")
 processed["Real Inbound"] = [[i] for i in processed["Real Inbound"]]
 processed["Real Outbound"] = [[i] for i in processed["Real Outbound"]]
@@ -21,30 +21,30 @@ processed["Real Outbound"] = [[i] for i in processed["Real Outbound"]]
 
 def main():
 
-    st.title("Visualizing Distribution of Intents in My Processed Twitter Data")
+    st.title("可视化我的处理过的 Twitter 数据中意图的分布")
 
-    # select = st.multiselect("Choose your dataset")
+    # select = st.multiselect("选择你的数据集")
 
-    # Inputting the intents
+    # 输入意图
 
     """
-    Keyword Search
+    关键词搜索
     """
 
-    # Search by keywords (single keyword filter)
-    keyword = st.text_input("What keyword would you like to explore today?")
+    # 通过关键词搜索（单个关键词过滤器）
+    keyword = st.text_input("今天你想探索哪个关键词?")
 
-    # Seeing what the processed Tweets look like
+    # 查看处理过的推文是什么样子
     filt = [
         (i, j) for i, j in enumerate(processed["Processed Inbound"]) if keyword in j
     ]
     filtered = processed.iloc[[i[0] for i in filt]]
 
-    # Showing how many tweets contain the keyword
-    st.text(f"{len(filtered)} Tweets contain the keyword {keyword}")
+    # 显示包含关键词的推文数量
+    st.text(f"有{len(filtered)}条推文包含关键词{keyword}")
 
-    st.subheader(f"Here are Tweets that contain the keyword")
-    # Showing the keyword filtered dataframe
+    st.subheader(f"这里是包含关键词的推文")
+    # 显示包含关键词的数据框
     pd.set_option("display.max_columns", None)
     st.dataframe(filtered.iloc[:, 0])
     pd.set_option("display.max_columns", None)
@@ -53,10 +53,10 @@ def main():
     st.dataframe(filtered.iloc[:, 2])
 
     """
-    Intent Exploration
+    意图探索
     """
 
-    st.subheader("Intent Distribution in the Data")
+    st.subheader("数据中意图的分布")
 
     intents = {
         "update": ["update"],
@@ -69,23 +69,20 @@ def main():
     st.write(intents)
 
     def get_key_tweets(series, keywords):
-        """ Takes as input the list of keywords and outputs the Tweets that contains at least
-        one of these keywords """
+        """ 输入关键词列表，输出包含至少一个这些关键词的推文 """
         keyword_tweets = []
         for tweet in series:
-            # Want to check if keyword is in tweets
+            # 检查关键词是否在推文中
             for keyword in keywords:
                 if keyword in tweet:
                     keyword_tweets.append(tweet)
         return keyword_tweets
 
     def to_set(l):
-        """ In order to make the Tweets a set to check for intersections, we need
-        to make them immutable by making it a tuple because sets only accept immutable
-        elements """
+        """ 为了将推文转换为集合以检查交集，我们需要将它们变为不可变的元组，因为集合只接受不可变元素 """
         return set([tuple(row) for row in l])
 
-    # Using the function above to visualize the distribution of intents in my dataset
+    # 使用上面的函数来可视化数据集中意图的分布
     intent_lengths = [
         len(get_key_tweets(processed["Processed Inbound"], intents[intent]))
         for intent in intents.keys()
@@ -94,53 +91,53 @@ def main():
         {"intents": list(intents.keys()), "intent_lengths": intent_lengths}
     ).sort_values("intent_lengths", ascending=False)
 
-    # Visualization
+    # 可视化
     plt.figure(figsize=(9, 7))
     plt.bar(keyword["intents"], keyword["intent_lengths"], color="#00acee")
-    plt.title("Distribution of Intents Using Keyword Searching")
-    plt.xlabel("Intent")
+    plt.title("使用关键词搜索的意图分布")
+    plt.xlabel("意图")
     plt.xticks(rotation=90)
-    plt.ylabel("Number of Tweets with the Intent Keywords")
+    plt.ylabel("具有意图关键词的推文数量")
     st.pyplot(bbox_inches="tight")
 
-    # Proportions visualization
+    # 比例可视化
     plt.figure(figsize=(9, 7))
     plt.bar(
         keyword["intents"], keyword["intent_lengths"] * 100 / 75879, color="#00acee"
     )
-    plt.title("Distribution of Intents Using Keyword Searching")
-    plt.xlabel("Intent")
+    plt.title("使用关键词搜索的意图分布")
+    plt.xlabel("意图")
     plt.xticks(rotation=90)
-    plt.ylabel("Percentage of Tweets with the Intent Keywords")
+    plt.ylabel("具有意图关键词的推文百分比")
     st.pyplot(bbox_inches="tight")
 
     """
-    Looking at combinations of intents
+    探索意图的组合
     """
 
-    # Initializing all the thresholds for min amount of combination appearances
+    # 初始化所有组合出现最小数量的阈值
     thres = [500, 10, 5, 5]
 
-    # Intent Tweets have all the keys, and as the value contains all the tweets that contain that key, as a set
+    # 意图推文具有所有键，值包含包含该键的所有推文，作为集合
     intent_tweets = {}
     for key in intents.keys():
         intent_tweets[key] = to_set(
             get_key_tweets(processed["Processed Inbound"], intents[key])
         )
 
-    # Iterating through all pairs, and getting how many Tweets intersect between the pair
+    # 遍历所有配对，并获取配对之间的推文交集数量
     keyword_overlaps = {}
 
-    # COMBINATIONS OF 2
+    # 2的组合
 
-    # Each i returns a tuple containing a pair of length r, which in this case is 2
+    # 每个i返回一个长度为r的元组，这里r为2
     for i in list(itertools.combinations(list(intents.keys()), 2)):
         a = to_set(intent_tweets[i[0]])
         b = to_set(intent_tweets[i[1]])
-        # Inserting pair to dictionary
+        # 将配对插入字典
         keyword_overlaps[f"{i[0]} + {i[1]}"] = len(a.intersection(b))
 
-    # Filtering to just the significant ones, which I define as greater than 100
+    # 过滤为仅包含重要的配对，我定义为大于100
     combs = []
     counts = []
     for i in keyword_overlaps.items():
@@ -148,31 +145,31 @@ def main():
             combs.append(i[0])
             counts.append(i[1])
 
-    # Visualizing as well
+    # 也可视化
     v = pd.DataFrame({"Combination": combs, "Counts": counts}).sort_values(
         "Counts", ascending=False
     )
     plt.figure(figsize=(9, 6))
     sns.barplot(x=v["Combination"], y=v["Counts"], palette="magma")
-    plt.title(f"Combinations of 2 Keywords (At Least {thres[0]} Occurances)")
+    plt.title(f"2个关键词的组合（至少{thres[0]}次出现）")
     plt.xticks(rotation=90)
     st.pyplot(bbox_inches="tight")
 
-    # COMBINATIONS OF 3
+    # 3的组合
     keyword_overlaps = {}
 
     try:
-        # Each i returns a tuple containing a pair of length r, which in this case is 3
+        # 每个i返回一个长度为r的元组，这里r为3
         for i in list(itertools.combinations(list(intents.keys()), 3)):
             a = to_set(intent_tweets[i[0]])
             b = to_set(intent_tweets[i[1]])
             c = to_set(intent_tweets[i[2]])
-            # Inserting pair to dictionary
+            # 将配对插入字典
             keyword_overlaps[f"{i[0]} + {i[1]} + {i[2]}"] = len(
                 a.intersection(b).intersection(c)
             )
 
-        # Filtering to just the significant ones, which I define as greater than 100
+        # 过滤为仅包含重要的配对，我定义为大于10
         combs = []
         counts = []
         for i in keyword_overlaps.items():
@@ -180,34 +177,34 @@ def main():
                 combs.append(i[0])
                 counts.append(i[1])
 
-        # Visualizing as well
+        # 也可视化
         v = pd.DataFrame({"Combination": combs, "Counts": counts}).sort_values(
             "Counts", ascending=False
         )
         plt.figure(figsize=(9, 6))
         sns.barplot(x=v["Combination"], y=v["Counts"], palette="magma")
-        plt.title(f"Combinations of 3 Keywords (At Least {thres[1]} Occurances)")
+        plt.title(f"3个关键词的组合（至少{thres[1]}次出现）")
         plt.xticks(rotation=90)
         st.pyplot(bbox_inches="tight")
     except ValueError as e:
-        st.text(f"Not enough 3-combinations (Thres = {thres[1]})")
+        st.text(f"3个组合不够（阈值 = {thres[1]})")
 
-    # COMBINATIONS OF 4
+    # 4的组合
     keyword_overlaps = {}
 
     try:
-        # Each i returns a tuple containing a pair of length r, which in this case is 4
+        # 每个i返回一个长度为r的元组，这里r为4
         for i in list(itertools.combinations(list(intents.keys()), 4)):
             a = to_set(intent_tweets[i[0]])
             b = to_set(intent_tweets[i[1]])
             c = to_set(intent_tweets[i[2]])
             d = to_set(intent_tweets[i[3]])
-            # Inserting pair to dictionary
+            # 将配对插入字典
             keyword_overlaps[f"{i[0]} + {i[1]} + {i[2]} + {i[3]}"] = len(
                 a.intersection(b).intersection(c).intersection(d)
             )
 
-        # Filtering to just the significant ones, which I define as greater than 10
+        # 过滤为仅包含重要的配对，我定义为大于5
         combs = []
         counts = []
         for i in keyword_overlaps.items():
@@ -215,35 +212,35 @@ def main():
                 combs.append(i[0])
                 counts.append(i[1])
 
-        # Visualizing as well
+        # 也可视化
         v = pd.DataFrame({"Combination": combs, "Counts": counts}).sort_values(
             "Counts", ascending=False
         )
         plt.figure(figsize=(9, 6))
         sns.barplot(x=v["Combination"], y=v["Counts"], palette="magma")
-        plt.title(f"Combinations of 4 Keywords (At Least {thres[2]} Occurances)")
+        plt.title(f"4个关键词的组合（至少{thres[2]}次出现）")
         plt.xticks(rotation=90)
         st.pyplot(bbox_inches="tight")
     except ValueError as e:
-        st.text(f"Not enough 4-combinations (Thres = {thres[2]})")
+        st.text(f"4个组合不够（阈值 = {thres[2]})")
 
-    # GROUPS OF 5
+    # 5的组合
     keyword_overlaps = {}
 
     try:
-        # Each i returns a tuple containing a pair of length r, which in this case is 5
+        # 每个i返回一个长度为r的元组，这里r为5
         for i in list(itertools.combinations(list(intents.keys()), 5)):
             a = to_set(intent_tweets[i[0]])
             b = to_set(intent_tweets[i[1]])
             c = to_set(intent_tweets[i[2]])
             d = to_set(intent_tweets[i[3]])
             e = to_set(intent_tweets[i[4]])
-            # Inserting pair to dictionary
+            # 将配对插入字典
             keyword_overlaps[f"{i[0]} + {i[1]} + {i[2]} + {i[3]} + {i[4]}"] = len(
                 a.intersection(b).intersection(c).intersection(d).intersection(e)
             )
 
-        # Filtering to just the significant ones, which I define as greater than 5
+        # 过滤为仅包含重要的配对，我定义为大于5
         combs = []
         counts = []
         for i in keyword_overlaps.items():
@@ -251,17 +248,17 @@ def main():
                 combs.append(i[0])
                 counts.append(i[1])
 
-        # Visualizing as well
+        # 也可视化
         v = pd.DataFrame({"Combination": combs, "Counts": counts}).sort_values(
             "Counts", ascending=False
         )
         plt.figure(figsize=(9, 6))
         sns.barplot(x=v["Combination"], y=v["Counts"], palette="magma")
-        plt.title(f"Combinations of 5 Keywords (At Least {thres[3]} Occurances)")
+        plt.title(f"5个关键词的组合（至少{thres[3]}次出现）")
         plt.xticks(rotation=90)
         st.pyplot(bbox_inches="tight")
     except ValueError as e:
-        st.text(f"Not enough 5-combinations (Thres = {thres[3]})")
+        st.text(f"5个组合不够（阈值 = {thres[3]}）")
 
 
 if __name__ == "__main__":

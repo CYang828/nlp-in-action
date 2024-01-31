@@ -1,16 +1,16 @@
-# Data science
+# 数据科学
 import pandas as pd
 import numpy as np
 import sklearn
 
-# NER
+# 命名实体识别
 import spacy
 from spacy import displacy
 import random
 from spacy.matcher import PhraseMatcher
 from pathlib import Path
 
-# Visualization
+# 可视化
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -21,24 +21,24 @@ import pickle
 import streamlit as st
 import imgkit
 
-# Reading back in intents
+# 读取意图
 with open(r"../objects/intents.yml") as file:
     intents = yaml.load(file, Loader=yaml.FullLoader)
 
-# Reading in training data
+# 读取训练数据
 train = pd.read_pickle("../objects/train.pkl")
 
-# Reading in processed data
+# 读取处理后的数据
 processed = pd.read_pickle("../objects/processed.pkl")
 
-# Read our trained models back in
+# 读取我们训练好的模型
 hardware_nlp = pickle.load(open("../models/hardware_big_nlp.pkl", "rb"))
 app_nlp = pickle.load(open("../models/app_big_nlp.pkl", "rb"))
 
-# Wrapper to display my displacy visualizations
+# 用于显示我的displacy可视化的包装器
 HTML_WRAPPER = """<div style="overflow-x: auto; border: 1px solid #e6e9ef; border-radius: 0.25rem; padding: 1rem; margin-bottom: 2.5rem">{}</div>"""
 
-# Testing out the results
+# 测试结果
 test_text_hardware = "My iphone sucks but my macbook pro doesnt. Why couldnt they make\
             my iphone better. At least I could use airpods with it. Mcabook pro is\
             the best! Apple watches too. Maybe if they made the iphone more like the\
@@ -49,53 +49,53 @@ test_text_app = "My top favorite apps include the facetime application, the appl
 
 
 def extract_hardware(user_input, visualize=False):
-    """ Takes as input the user input, and outputs all the entities extracted. Also made a toggler for visualizing with displacy."""
-    # Loading it in
+    """接受用户输入，并输出提取的所有实体。还制作了一个用于使用displacy进行可视化的切换器。"""
+    # 加载
     hardware_nlp = pickle.load(open("../models/hardware_big_nlp.pkl", "rb"))
     doc = hardware_nlp(user_input)
 
     extracted_entities = []
 
-    # These are the objects you can take out
+    # 这些是您可以取出的对象
     for ent in doc.ents:
         extracted_entities.append((ent.text, ent.start_char, ent.end_char, ent.label_))
 
-    # If you want to visualize
+    # 如果要进行可视化
     if visualize == True:
-        # Visualizing with displaCy how the document had it's entity tagged (runs a server)
+        # 使用displacy进行实体标记的可视化（运行服务器）
         colors = {"HARDWARE": "linear-gradient(90deg, #aa9cfc, #fc9ce7)"}
         options = {"ents": ["HARDWARE"], "colors": colors}
-        # Saves to HTML string
+        # 保存为HTML字符串
         html = displacy.render(doc, style="ent", options=options)
         # with open("displacy/hardware.html", "a") as out:
         #     out.write(html + "\n")
-        # Double newlines seem to mess with the rendering
+        # 双换行似乎会影响渲染
         html = html.replace("\n\n", "\n")
         st.write(HTML_WRAPPER.format(html), unsafe_allow_html=True)
     return extracted_entities
 
 
 def extract_app(user_input, visualize=False):
-    """ Takes as input the user input, and outputs all the entities extracted. Also made a toggler for visualizing with displacy."""
-    # Loading it in
+    """接受用户输入，并输出提取的所有实体。还制作了一个用于使用displacy进行可视化的切换器。"""
+    # 加载
     app_nlp = pickle.load(open("../models/app_big_nlp.pkl", "rb"))
     doc = app_nlp(user_input)
 
     extracted_entities = []
 
-    # These are the objects you can take out
+    # 这些是您可以取出的对象
     for ent in doc.ents:
         extracted_entities.append((ent.text, ent.start_char, ent.end_char, ent.label_))
 
-    # If you want to visualize
+    # 如果要进行可视化
     if visualize == True:
-        # Visualizing with displaCy how the document had it's entity tagged (runs a server)
+        # 使用displacy进行实体标记的可视化（运行服务器）
         colors = {"APP": "linear-gradient(90deg, #aa9cfc, #fc9ce7)"}
         options = {"ents": ["APP"], "colors": colors}
         html = displacy.render(doc, style="ent", options=options)
         # with open("displacy/hardware.html", "a") as out:
         #     out.write(html + "\n")
-        # Double newlines seem to mess with the rendering
+        # 双换行似乎会影响渲染
         html = html.replace("\n\n", "\n")
         st.write(HTML_WRAPPER.format(html), unsafe_allow_html=True)
 
@@ -106,6 +106,6 @@ def extract_default(user_input):
     pass
 
 
-# Test functionality
+# 测试功能
 # print(extract_app(test_text_app))
 # extract_hardware(test_text_hardware, visualize=True)

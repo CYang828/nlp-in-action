@@ -18,6 +18,7 @@ gitee 备份地址 https://gitee.com/cyang828/nlp-in-action
 | 意图探索 | | | [地址](https://github.com/CYang828/nlp-in-action/blob/main/4.explore-intents.ipynb) | |
 | 意图分类 | | | [地址](https://github.com/CYang828/nlp-in-action/blob/main/4.intent-classfication.ipynb) | |
 | 实体识别 | | | [地址](https://github.com/CYang828/nlp-in-action/blob/main/5.ner.ipynb) | |
+| 完整项目 |  | | [项目入口](deploy/README.md) | |
 
 
 

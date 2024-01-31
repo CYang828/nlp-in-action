@@ -4,7 +4,7 @@ from keras.preprocessing.sequence import pad_sequences
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
-# Load intent classification model
+# 加载意图分类模型
 from keras.models import load_model
 
 import pandas as pd
@@ -12,14 +12,14 @@ import numpy as np
 import yaml
 
 train = pd.read_pickle("../objects/train.pkl")
-print(f"Training data: {train.head()}")
+print(f"训练数据: {train.head()}")
 
 model = load_model("../models/intent_classification_b.h5")
 
-# I use Keras' Tokenizer API - helpful link I followed: https://machinelearningmastery.com/prepare-text-data-deep-learning-keras/
-# Train test split
-# Split in to train and test
-# stratify for class imbalance and random state for reproducibility - 7 is my lucky number
+# 我使用Keras的Tokenizer API - 我遵循的有用链接: https://machinelearningmastery.com/prepare-text-data-deep-learning-keras/
+# 训练测试分离
+# 分割为训练和测试集
+# 为了处理类别不平衡和可重现性，使用stratify和random state - 7是我的幸运数字
 X_train, X_val, y_train, y_val = train_test_split(
     train["Utterance"],
     train["Intent"],
@@ -30,25 +30,24 @@ X_train, X_val, y_train, y_val = train_test_split(
 )
 
 
-# Encoding the target variable
+# 编码目标变量
 le = LabelEncoder()
 le.fit(y_train)
 
-# NOTE: Since we
-#  use an embedding matrix, we use the Tokenizer API to integer encode our data - https://machinelearningmastery.com/use-word-embedding-layers-deep-learning-keras/
+# 注意: 由于我们使用了嵌入矩阵，我们使用Tokenizer API对数据进行整数编码 - https://machinelearningmastery.com/use-word-embedding-layers-deep-learning-keras/
 t = Tokenizer()
 t.fit_on_texts(X_train)
 
-# Pad documents to a specified max length
+# 将文档填充到指定的最大长度
 max_length = len(max(X_train, key=len))
 
 
 def convert_to_padded(tokenizer, docs):
-    """ Taking in Keras API Tokenizer and documents and returns their padded version """
-    ## Using API's attributes
-    # Embedding
+    """接受Keras API Tokenizer和文档，返回它们的填充版本"""
+    ## 使用API的属性
+    # 嵌入
     embedded = t.texts_to_sequences(docs)
-    # Padding
+    # 填充
     padded = pad_sequences(embedded, maxlen=max_length, padding="post")
     return padded
 
@@ -58,38 +57,37 @@ padded_X_val = convert_to_padded(tokenizer=t, docs=X_val)
 
 
 def infer_intent(user_input):
-    """ Making a function that recieves a user input and outputs a 
-    dictionary of predictions """
-    assert isinstance(user_input, str), "User input must be a string!"
+    """创建一个接收用户输入并输出预测字典的函数"""
+    assert isinstance(user_input, str), "用户输入必须是字符串!"
     keras_input = [user_input]
     print(user_input)
 
-    # Converting to Keras form
+    # 转换为Keras形式
     padded_text = convert_to_padded(t, keras_input)
     x = padded_text[0]
 
-    # Prediction for each document
+    # 每个文档的预测
     probs = model.predict(padded_text)
-    #     print('Prob array shape', probs.shape)
+    #     print('概率数组形状', probs.shape)
 
-    # Get the classes from label encoder
+    # 从标签编码器获取类别
     classes = le.classes_
 
-    # Getting predictions dict and sorting
+    # 获取预测字典并排序
     predictions = dict(zip(classes, probs[0]))
     sorted_predictions = {
         k: v
         for k, v in sorted(predictions.items(), key=lambda item: item[1], reverse=True)
     }
 
-    # Saving intent classification
-    # Storing it to YAML file
+    # 保存意图分类
+    # 将其存储到YAML文件中
     with open("../objects/sorted_predictions.yml", "w") as outfile:
         yaml.dump(sorted_predictions, outfile, default_flow_style=False)
 
     return user_input, sorted_predictions
 
 
-# Testing results
+# 测试结果
 # print(infer_intent("update is not working"))
 
