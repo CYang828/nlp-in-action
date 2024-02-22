@@ -43,7 +43,8 @@ def main(phrase="有什么问题你尽管问!"):
         backend_dash(intents, user_input, history_df)
 
     if end == False:
-        st.clear_cache()
+        st.cache_data.clear()
+        # 意图澄清
         conversation(Actions("你能换种说法吗?"))
 
 
@@ -82,7 +83,6 @@ def talk(prompt):
         - User_input
         - Predictions: 包含意图为键和预测概率（0-1）为值的字典
     History_df: 给定输入的对话状态
-
     """
     # 输入框
     user_input = st.text_input(prompt)
@@ -119,7 +119,7 @@ def listener(max_intent, entity, actions):
             no = st.button("否", type="primary")
 
         if yes:
-            st.text(respond("太好了!很高兴能为你提供服务!"))
+            st.markdown(respond("太好了!很高兴能为你提供服务!"))
             end = True
 
         if no:
@@ -135,7 +135,6 @@ def listener(max_intent, entity, actions):
 
     if max_intent == "greeting":
         st.markdown(respond(a.utter_greet()))
-
     elif max_intent == "info":
         st.markdown(respond(a.info(entity)))
         end = follow_up()
@@ -257,6 +256,7 @@ def action_mapper(history_df):
     #     print(f'max_intent{max_intent}')
 
     # TODO: 如果置信度分数不够高，则回退
+    # 意图澄清
 
     return (max_intent, extracted_entities)
 
