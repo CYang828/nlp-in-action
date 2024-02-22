@@ -19,7 +19,7 @@ gitee 备份地址 https://gitee.com/cyang828/nlp-in-action
 | 意图分类 | | | [地址](https://github.com/CYang828/nlp-in-action/blob/main/05.intent-classfication.ipynb) | |
 | 实体识别 | | | [地址](https://github.com/CYang828/nlp-in-action/blob/main/06.ner.ipynb) | |
 | 完整项目 |  | | [项目入口](deploy/README.md) | |
-| 预训练模型和大模型的进化历程 | [Transformer笔记](./07.transformer-all-in-one/README.md) [阅读](https://rarelimiting.feishu.cn/wiki/ZaXowgBbTiAm7HkotLNczmq3nsb?fromScene=spaceOverview) | |  |  |
+| 预训练模型和大模型的进化历程 | [Transformer笔记](./transformer-all-in-one/README.md) [阅读](https://rarelimiting.feishu.cn/wiki/ZaXowgBbTiAm7HkotLNczmq3nsb?fromScene=spaceOverview) | |  |  |
 
 
 
