@@ -1,7 +1,7 @@
 
 [submodule "transformer-all-in-one"]
-	path = 07.transformer-all-in-one
+	path = transformer-all-in-one
 	url = git@github.com:CYang828/transformer-all-in-one.git
 [submodule "llm-tutorials-chinese"]
-	path = 09.llm-tutorials-chinese
+	path = llm-tutorials-chinese
 	url = git@github.com:CYang828/llm-tutorials-chinese.git
