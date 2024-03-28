@@ -19,11 +19,11 @@ gitee 备份地址 https://gitee.com/cyang828/nlp-in-action
 | 意图分类 | | | [地址](https://github.com/CYang828/nlp-in-action/blob/main/05.intent-classfication.ipynb) | |
 | 实体识别 | | | [地址](https://github.com/CYang828/nlp-in-action/blob/main/06.ner.ipynb) | |
 | 完整项目 |  | | [项目入口](deploy/README.md) | |
-| 预训练模型和大模型的进化历程 |  | |  | [Transformer笔记](https://github.com/CYang828/transformer-all-in-one/tree/dd206218ba169880e27803ddc5ad59ac3cbd25b5) [阅读](https://rarelimiting.feishu.cn/wiki/ZaXowgBbTiAm7HkotLNczmq3nsb?fromScene=spaceOverview) |
-| Huggingface Transformer 指南 |  | |  | [Huggingface笔记](https://github.com/CYang828/nlp-in-action/tree/main/huggingface-tutorials) |
-| 大模型应用开发 |  | |  | [大模型开发笔记](https://rarelimiting.feishu.cn/wiki/PW1fw9iQviRbznkizgzcgbtHnRg?fromScene=spaceOverview) [Langchain开发指南](https://github.com/CYang828/llm-tutorials-chinese/tree/58c0a55aea3efb9f488ada8267b79ad43a400f71/book)  |
-| 大模型应用开发高级技巧 |  | |  | [大模型开发笔记](https://rarelimiting.feishu.cn/wiki/PW1fw9iQviRbznkizgzcgbtHnRg?fromScene=spaceOverview) [Langchain开发指南](https://github.com/CYang828/llm-tutorials-chinese/tree/58c0a55aea3efb9f488ada8267b79ad43a400f71/book)  |
-| 提示工程 |  | |  | [提示工程笔记](https://rarelimiting.feishu.cn/wiki/PruLw3hjMiHZFxkepO8cfFSBnWh?from=from_copylink)  |
-| 知识图谱 |  | |  | [知识图谱笔记](https://rarelimiting.feishu.cn/wiki/ZT1hwsfrniwySQkncl4c1NQEn3d?from=from_copylink)  |
+| 预训练模型和大模型的进化历程 |  | | [Transformer笔记](https://github.com/CYang828/transformer-all-in-one/tree/dd206218ba169880e27803ddc5ad59ac3cbd25b5) [阅读](https://rarelimiting.feishu.cn/wiki/ZaXowgBbTiAm7HkotLNczmq3nsb?fromScene=spaceOverview)  | |
+| Huggingface Transformer 指南 |  | | [Huggingface笔记](https://github.com/CYang828/nlp-in-action/tree/main/huggingface-tutorials) |  |
+| 大模型应用开发 |  | | [大模型开发笔记](https://rarelimiting.feishu.cn/wiki/PW1fw9iQviRbznkizgzcgbtHnRg?fromScene=spaceOverview) [Langchain开发指南](https://github.com/CYang828/llm-tutorials-chinese/tree/58c0a55aea3efb9f488ada8267b79ad43a400f71/book)  |  |
+| 大模型应用开发高级技巧 |  | | [大模型开发笔记](https://rarelimiting.feishu.cn/wiki/PW1fw9iQviRbznkizgzcgbtHnRg?fromScene=spaceOverview) [Langchain开发指南](https://github.com/CYang828/llm-tutorials-chinese/tree/58c0a55aea3efb9f488ada8267b79ad43a400f71/book)  |  |
+| 提示工程 |  | | [提示工程笔记](https://rarelimiting.feishu.cn/wiki/PruLw3hjMiHZFxkepO8cfFSBnWh?from=from_copylink) |   |
+| 知识图谱 |  | | [知识图谱笔记](https://rarelimiting.feishu.cn/wiki/ZT1hwsfrniwySQkncl4c1NQEn3d?from=from_copylink) |   |
 
 
