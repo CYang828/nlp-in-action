@@ -24,5 +24,6 @@ gitee 备份地址 https://gitee.com/cyang828/nlp-in-action
 | 大模型应用开发 |  | |  | [大模型开发笔记](https://rarelimiting.feishu.cn/wiki/PW1fw9iQviRbznkizgzcgbtHnRg?fromScene=spaceOverview) [Langchain开发指南](https://github.com/CYang828/llm-tutorials-chinese/tree/58c0a55aea3efb9f488ada8267b79ad43a400f71/book)  |
 | 大模型应用开发高级技巧 |  | |  | [大模型开发笔记](https://rarelimiting.feishu.cn/wiki/PW1fw9iQviRbznkizgzcgbtHnRg?fromScene=spaceOverview) [Langchain开发指南](https://github.com/CYang828/llm-tutorials-chinese/tree/58c0a55aea3efb9f488ada8267b79ad43a400f71/book)  |
 | 提示工程 |  | |  | [提示工程笔记](https://rarelimiting.feishu.cn/wiki/EHoXwiExyivk0KkZwSfcosu2nod?fromScene=spaceOverview)  |
+| 知识图谱 |  | |  | [知识图谱笔记](https://rarelimiting.feishu.cn/wiki/AvrZwNFrviQbdskHwcIcVuACnHh?fromScene=spaceOverview)  |
 
 
