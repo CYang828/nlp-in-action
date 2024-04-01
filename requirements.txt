@@ -214,3 +214,5 @@ ypy-websocket==0.8.4
 zeugma==0.49
 zipp==3.1.0
 altair<5
+llama_index
+langchain
