@@ -6,3 +6,6 @@
 [submodule "llm-tutorials-chinese"]
 	path = llm-tutorials-chinese
 	url = git@github.com:CYang828/llm-tutorials-chinese.git
+[submodule "llm-interview-chinese"]
+	path = llm-interview-chinese
+	url = git@github.com:CYang828/llm-interview-chinese.git
