@@ -4,6 +4,18 @@
 *使用此代码生成的知识图谱* 
 此图的ghpages链接: https://rahulnyk.github.io/knowledge_graph/
 
+## 快速使用
+
+- [安装 poetry](https://python-poetry.org/docs/)
+- 安装基础环境
+```bash
+conda env create -f environment.yml
+```
+- 使用 poetry 安装依赖包
+```bash
+poetry install
+```
+- 进入 ./extract_graph.ipynb 文件进行图谱生成
 
 ## 什么是知识图谱？
 知识图谱，也称为语义网络，表示了现实世界实体的网络，即对象、事件、情况或概念，并展示它们之间的关系。这些信息通常存储在图数据库中，并以图结构可视化，因此有了知识“图”这个术语。
