@@ -1,7 +1,14 @@
-FROM quay.io/jupyter/minimal-notebook:latest
+# 选择1: 使用包含更多工具的scipy-notebook镜像（已包含Node.js）
+FROM quay.io/jupyter/scipy-notebook:latest
+# 或者选择2: 继续使用minimal-notebook但手动安装Node.js
+# FROM quay.io/jupyter/minimal-notebook:latest
 
 # 切换到root用户安装系统包
 USER root
+
+# 添加NodeSource仓库并安装Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
+    apt-get install -y nodejs
 
 # 安装编译工具和开发依赖
 RUN apt-get update && \
@@ -14,6 +21,9 @@ RUN apt-get update && \
         curl \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# 验证Node.js和npm安装
+RUN node --version && npm --version
 
 # 切换回默认用户
 USER $NB_UID
