@@ -8,3 +8,10 @@ objects/*
 .vscode/*
 *.tsv
 *.zip
+
+# 环境变量和敏感配置文件
+.env
+.env.local
+*.key
+*api_key*
+config.json

@@ -1,0 +1,19 @@
+# 环境变量配置示例
+# 请复制此文件为 .env 并填入你的真实API密钥
+
+# OpenAI API密钥
+OPENAI_API_KEY=your_openai_api_key_here
+
+# SERPAPI API密钥 (用于Google搜索)
+SERPAPI_API_KEY=your_serpapi_api_key_here
+
+# OpenAI API代理基础URL (如果使用代理)
+OPENAI_API_BASE=https://api.openai.com/v1
+
+# Stripe API密钥 (如果需要支付功能)
+STRIPE_API_KEY=your_stripe_api_key_here
+
+# 注意：
+# 1. 请不要将包含真实密钥的 .env 文件提交到 Git 仓库
+# 2. 确保 .env 文件已添加到 .gitignore 中
+# 3. 各个教程中使用环境变量而不是硬编码API密钥 
