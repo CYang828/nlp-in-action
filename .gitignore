@@ -1,0 +1,10 @@
+models/*
+.ipynb_checkpoints/*
+objects/*
+.DS_Store
+*.arrow
+*.txt
+*.slurm
+.vscode/*
+*.tsv
+*.zip

@@ -1,0 +1,11 @@
+[submodule "llm-tutorials"]
+	path = ./course/llm-tutorials
+	url = git@github.com:CYang828/llm-tutorials.git
+
+[submodule "llm-interview"]
+	path = ./course/llm-interview
+	url = git@github.com:CYang828/llm-interview.git
+
+[submodule "course/01.nlp-traditional/transformer-all-in-one"]
+	path = course/01.nlp-traditional/transformer-all-in-one
+	url = git@github.com:CYang828/transformer-all-in-one.git

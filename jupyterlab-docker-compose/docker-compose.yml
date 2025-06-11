@@ -1,0 +1,11 @@
+version: '3'
+services:
+  jupyter:
+    build: 
+      context: .
+      dockerfile: ./docker/jupyter/Dockerfile
+    volumes:
+      - ../course:/home/rarelimiting/lab
+    ports:
+      - 8888:8888
+    command: "jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token='' --notebook-dir=/home/rarelimiting/lab"
